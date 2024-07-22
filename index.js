@@ -37,17 +37,39 @@
 
 import { name } from "ejs";
 import express from "express";
+import mongoose from "mongoose";
 import path from "path";
 
+
 const app=express();
+
+const users=[];
+
+//using middleware
+app.use(express.static(path.join(path.resolve(),"public")));
+//middleware for post 
+app.use(express.urlencoded({extended:true}));
 
 //setting up view engine
 app.set("view engine","ejs");
 
 app.get("/",(req,res)=>{
     res.render("index",{name:"Risha Bhowmick"});
+    // res.sendFile("index.html");
 })
-
+app.get("/add",(req,res)=>{
+    res.send("nice");
+    // res.sendFile("index.html");
+})
+app.post("/",(req,res)=>{
+    users.push({userName:req.body.name, email: req.body.email});
+    res.render("success");
+})
+app.get("/users",(req,res)=>{
+    res.json({
+        users,
+    })
+})
 app.listen(5000,()=>{
     console.log("Server is working");
 });
